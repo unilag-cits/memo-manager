@@ -1,7 +1,7 @@
-import React, { PureComponent } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ReactPaginate from "react-paginate";
-import { connect } from "react-redux";
+import { connect, useSelector, useDispatch } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
 import moment from "moment";
@@ -22,23 +22,24 @@ const styles = (theme) => ({
   },
 });
 
-export class TranxReport extends PureComponent {
-  constructor(props) {
-    super(props);
+export function TranxReport({ props, setTabDetail, setisEdit, setNames }) {
+  const memo = useSelector((state) => state.memo.memo);
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth.isAuthenticated);
+  const [values, setValues] = useState({
+    offset: 0,
+    tableData: [],
+    orgtableData: [],
+    perPage: 5,
+    currentPage: 0,
+    // pageCount:
+  });
 
-    this.state = {
-      offset: 0,
-      tableData: [],
-      orgtableData: [],
-      perPage: 5,
-      currentPage: 0,
-    };
-    this.handlePageClick = this.handlePageClick.bind(this);
-  }
+  const { offset, tableData, orgtableData, perPage, currentPage } = values;
 
-  handlePageClick = (e) => {
+  const handlePageClick = (e) => {
     const selectedPage = e.selected;
-    const offset = selectedPage * this.state.perPage;
+    const offset = selectedPage * perPage;
 
     this.setState(
       {
@@ -51,181 +52,139 @@ export class TranxReport extends PureComponent {
     );
   };
 
-  loadMoreData() {
-    const data = this.state.orgtableData;
+  const loadMoreData = () => {
+    const data = orgtableData;
 
-    const slice = data.slice(
-      this.state.offset,
-      this.state.offset + this.state.perPage
-    );
+    const slice = data.slice(offset, offset + perPage);
     this.setState({
-      pageCount: Math.ceil(data.length / this.state.perPage),
+      pageCount: Math.ceil(data.length / perPage),
       tableData: slice,
     });
-  }
+  };
 
-  componentDidMount() {
-    this.getData();
-  }
+  // componentDidMount() {
+  //   this.getData();
+  // }
+  useEffect(() => {
+    getData();
+  }, []);
 
-  handleClick = (e) => {
+  const handleClick = (e) => {
     e.preventDefault();
     if (localStorage.getItem("modalValues") === undefined) {
       return;
     }
-    this.props.showModal();
+    dispatch(showModal());
   };
 
-  handleClickView = (e) => {
-    e.preventDefault();
-    if (localStorage.getItem("modalValues") === undefined) {
-      return;
-    }
-    this.props.showModal();
-  };
-
-  handleClickEdit = (e) => {
-    e.preventDefault();
-    if (localStorage.getItem("modalValues") === undefined) {
-      return;
-    }
-    this.props.showModal();
-  };
-
-  getData = () => {
-    console.log(this.props.memo);
+  const getData = () => {
     setTimeout(() => {
-      return this.props.memo === null
+      return memo === null
         ? ""
-        : this.setState({
-            pageCount: Math.ceil(this.props.memo.length / this.state.perPage),
-            orgtableData: this.props.memo,
-            tableData: this.props.memo.slice(
-              this.state.offset,
-              this.state.offset + this.state.perPage
-            ),
+        : setValues({
+            pageCount: Math.ceil(memo.length / perPage),
+            orgtableData: memo,
+            tableData: memo.slice(offset, offset + perPage),
           });
     }, 2000);
   };
 
-  render() {
-    const { classes } = this.props;
-    return (
-      <div>
-        {/* <ReactPaginate
+  return (
+    <div>
+      <div className="responsive-container">
+        <table>
+          <thead>
+            <tr>
+              <th>M/No</th>
+              <th>Title</th>
+              <th>From</th>
+              <th>To</th>
+              <th>date</th>
+              <th>Logged Date</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tableData.map((tdata, index) => (
+              <tr key={index}>
+                <td data-title="M/No">{index + 1}</td>
+                <td data-title="Title">{tdata.memoTitle}</td>
+                <td data-title="From">{tdata.memoFrom}</td>
+                <td data-title="To">{tdata.memoTo}</td>
+                <td data-title="Logged date">
+                  {moment(tdata.createdAt).format("DD MMM, YYYY")}
+                </td>
+                <td data-title="Date of Arrival">{tdata.LoggedDate}</td>
+                <td data-title="Status">
+                  <Button
+                    variant="contained"
+                    style={{ backgroundColor: "#FF0000", color: "#fff" }}
+                  >
+                    pending
+                  </Button>
+                </td>
+                <td data-title="Pending">
+                  <Button
+                    onClick={(e) => {
+                      if (localStorage.token) {
+                        handleClick(e);
+                        localStorage.setItem("modalValues", "view");
+                      }
+                    }}
+                  >
+                    <span>
+                      <FontAwesomeIcon icon={["far", "eye"]} color="#1976D2" />
+                    </span>
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setTabDetail(1);
+                      setNames("EDIT");
+                      setisEdit(true);
+                    }}
+                  >
+                    <span className="iconTag">
+                      <FontAwesomeIcon icon={["far", "edit"]} color="#1976D2" />
+                    </span>
+                  </Button>
+                  <Button
+                    onClick={(e) => {
+                      if (localStorage.token) {
+                        handleClick(e);
+                        localStorage.setItem("modalValues", "paperclip");
+                      }
+                    }}
+                  >
+                    <span className="iconTag">
+                      <FontAwesomeIcon
+                        icon={["fas", "paperclip"]}
+                        color="#1976D2"
+                      />
+                    </span>
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <ReactPaginate
           previousLabel={"prev"}
           nextLabel={"next"}
           breakLabel={"..."}
           breakClassName={"break-me"}
-          pageCount={this.state.pageCount}
+          // pageCount={pageCount}
+          pageCount={perPage}
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}
-          onPageChange={this.handlePageClick}
+          onPageChange={handlePageClick}
           containerClassName={"pagination"}
           subContainerClassName={"pages pagination"}
           activeClassName={"active"}
-        /> */}
-        <div className="responsive-container">
-          <table>
-            <thead>
-              <tr>
-                <th>M/No</th>
-                <th>Title</th>
-                <th>From</th>
-                <th>To</th>
-                <th>Date of Arrival</th>
-                <th>date</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.tableData.map((tdata, index) => (
-                <tr key={index}>
-                  <td data-title="M/No">{index + 1}</td>
-                  <td data-title="Title">{tdata.memoTitle}</td>
-                  <td data-title="From">{tdata.memoFrom}</td>
-                  <td data-title="To">{tdata.memoTo}</td>
-                  <td data-title="Date of Arrival">not yet done</td>
-                  <td data-title="Logged date">
-                    {moment(tdata.createdAt).format("DD MMM, YYYY")}
-                  </td>
-                  <td data-title="Status">
-                    <Button
-                      variant="contained"
-                      style={{ backgroundColor: "#FF0000", color: "#fff" }}
-                    >
-                      pending
-                    </Button>
-                  </td>
-                  <td data-title="Pending">
-                    <Button
-                      onClick={(e) => {
-                        if (localStorage.token) {
-                          this.handleClick(e);
-                          localStorage.setItem("modalValues", "view");
-                        }
-                      }}
-                    >
-                      <span>
-                        <FontAwesomeIcon
-                          icon={["far", "eye"]}
-                          color="#1976D2"
-                        />
-                      </span>
-                    </Button>
-                    <Button
-                      onClick={(e) => {
-                        if (localStorage.token) {
-                          this.handleClick(e);
-                          localStorage.setItem("modalValues", "edit");
-                        }
-                      }}
-                    >
-                      <span className="iconTag">
-                        <FontAwesomeIcon
-                          icon={["far", "edit"]}
-                          color="#1976D2"
-                        />
-                      </span>
-                    </Button>
-                    <Button
-                      onClick={(e) => {
-                        if (localStorage.token) {
-                          this.handleClick(e);
-                          localStorage.setItem("modalValues", "paperclip");
-                        }
-                      }}
-                    >
-                      <span className="iconTag">
-                        <FontAwesomeIcon
-                          icon={["fas", "paperclip"]}
-                          color="#1976D2"
-                        />
-                      </span>
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <ReactPaginate
-            previousLabel={"prev"}
-            nextLabel={"next"}
-            breakLabel={"..."}
-            breakClassName={"break-me"}
-            pageCount={this.state.pageCount}
-            marginPagesDisplayed={2}
-            pageRangeDisplayed={5}
-            onPageChange={this.handlePageClick}
-            containerClassName={"pagination"}
-            subContainerClassName={"pages pagination"}
-            activeClassName={"active"}
-          />
-        </div>
+        />
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 const mapStateToProps = (state) => ({
@@ -233,6 +192,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps, { showModal })(
-  withStyles(styles)(TranxReport)
-);
+export default connect(null, { showModal })(withStyles(styles)(TranxReport));

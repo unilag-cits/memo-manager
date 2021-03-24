@@ -50,10 +50,12 @@ class Signin extends Component {
     }
 
     // if authenticated redirect
-    if (isAuthenticated) {
-      this.SendRedirect();
+    if (isAuthenticated === true) {
+      // this.props.history.push(`${process.env.REACT_APP_URL}/memolist`);
+      window.location.href = `${process.env.REACT_APP_URL}/memolist`;
+      // this.setState({ redirect: true });
       this.props.hideLoader();
-      this.props.history.push(`${process.env.REACT_APP_URL}/memo-list`);
+      this.SendRedirect();
     }
   }
 
@@ -73,7 +75,7 @@ class Signin extends Component {
 
     // Attempt to login
     this.props.signin(user);
-    this.props.showLoader();
+    // this.props.showLoader();
   }
 
   handleChange(e) {
@@ -99,9 +101,9 @@ class Signin extends Component {
 
   render() {
     const { formErrors } = this.state;
-    // if (this.state.redirect) {
-    //   return <Redirect to='/loading' />
-    // }
+    if (this.state.redirect) {
+      console.log("Redirect");
+    }
     return (
       <>
         <div className="columns sign-in">
@@ -118,7 +120,8 @@ class Signin extends Component {
                       paddingBottom: "10px",
                       paddingLeft: "6px",
                       paddingRight: "6px",
-                    }}>
+                    }}
+                  >
                     {this.state.msg ? (
                       <Alert severity="error">{this.state.msg}</Alert>
                     ) : null}

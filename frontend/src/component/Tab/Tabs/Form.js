@@ -1,42 +1,56 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
-import { TextField, Button } from "@material-ui/core";
+import { TextField, Button, Container } from "@material-ui/core";
 import UploadButton from "../../Uploadbtn";
 import { makeStyles } from "@material-ui/core/styles";
 import { memo } from "../../../action/newMemoForm";
+import MenuItem from "@material-ui/core/MenuItem";
 
-// const useStyles = makeStyles((theme) => ({
-//   root: {
-//     "& > *": {
-//       margin: theme.spacing(1),
-//     },
-//   },
-//   input: {
-//     display: "none",
-//   },
-// }));
+function Form() {
+  const [values, setValues] = useState({
+    memoFrom: "",
+    memoTo: "",
+    memoTitle: "",
+    memoRemark: "",
+    date: "",
+    loggedDate: "",
+    file: "",
+    select: "",
+    imageFile: [],
+  });
 
-class Form extends Component {
-  constructor(props) {
-    super(props);
+  const {
+    memoFrom,
+    memoTo,
+    memoTitle,
+    memoRemark,
+    date,
+    loggedDate,
+    file,
+    select,
+    imageFile,
+  } = values;
+  // constructor(props) {
+  //   super(props);
 
-    this.state = {
-      memoFrom: "",
-      memoTo: "",
-      memoTitle: "",
-      memoRemark: "",
-      date: "",
-      file: "",
-      imageFile: [],
-    };
-  }
+  //   this.state = {
+  //     memoFrom: "",
+  //     memoTo: "",
+  //     memoTitle: "",
+  //     memoRemark: "",
+  //     date: "",
+  //     loggedDate: "",
+  //     file: "",
+  //     imageFile: [],
+  //   };
+  // }
 
-  handleChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    setValues({ [e.target.name]: e.target.value });
     console.log(e.target.value);
   };
 
-  handleImageChange = (e) => {
+  const handleImageChange = (e) => {
     const blob = new Blob([e.target.files[0]]);
     const blobUrl = URL.createObjectURL(blob);
     const name = e.target.files[0].name;
@@ -56,14 +70,18 @@ class Form extends Component {
     });
   };
 
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    const { memoFrom, memoTo, memoTitle, memoRemark, date, file } = this.state;
-
-    // if (file !== "") {
-    //   this.setState({ redirect: true });
-    // }
+    const {
+      memoFrom,
+      memoTo,
+      memoTitle,
+      memoRemark,
+      date,
+      file,
+      loggedDate,
+    } = this.state;
 
     let formData = new FormData();
     formData.append("memoFrom", memoFrom);
@@ -71,6 +89,7 @@ class Form extends Component {
     formData.append("memoTitle", memoTitle);
     formData.append("memoRemark", memoRemark);
     formData.append("date", date);
+    formData.append("loggedDate", loggedDate);
     formData.append("file", file);
 
     const newMemo = {
@@ -80,107 +99,135 @@ class Form extends Component {
       memoRemark,
       date,
       formData,
+      loggedDate,
     };
 
-    // console.log(formData);
+    // console.log(newMemo);
 
     this.props.memo(formData);
   };
 
-  render() {
-    return (
-      <div style={{ paddingTop: "50px" }}>
+  return (
+    <Container>
+      <div className="formUpdate" style={{ paddingTop: "50px" }}>
         <div style={{ paddingTop: "20px" }}>
-          <label style={{ paddingRight: "35px" }}>From: </label>
           <TextField
-            style={{ width: "80%" }}
-            id="outlined-basic"
-            name="memoFrom"
-            onChange={(e) => this.handleChange(e)}
-            value={this.state.memoFrom || ""}
-            variant="outlined"
+            id="date"
+            label="Date"
+            variant="filled"
+            className="formDate"
+            type="date"
+            defaultValue="2017-05-24"
+            name="date"
+            onChange={(e) => handleChange(e)}
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
         </div>
         <div style={{ paddingTop: "20px" }}>
-          <label style={{ paddingRight: "50px" }}>To: </label>
           <TextField
-            style={{ width: "80%" }}
+            id="date"
+            label="Logged Date"
+            variant="filled"
+            className="formDate"
+            type="date"
+            defaultValue="2017-05-24"
+            name="loggedDate"
+            onChange={(e) => handleChange(e)}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+        </div>
+        <div style={{ paddingTop: "20px" }}>
+          <TextField
+            id="outlined-basic"
+            label="From"
+            name="memoFrom"
+            className="formText"
+            onChange={(e) => handleChange(e)}
+            value={memoFrom || ""}
+            variant="filled"
+          />
+        </div>
+        <div style={{ paddingTop: "20px" }}>
+          <TextField
             id="outlined-basic"
             name="memoTo"
-            onChange={(e) => this.handleChange(e)}
-            value={this.state.memoTo || ""}
-            variant="outlined"
+            label="To"
+            className="formText"
+            onChange={(e) => handleChange(e)}
+            value={memoTo || ""}
+            variant="filled"
           />
         </div>
         <div style={{ paddingTop: "20px" }}>
-          <label style={{ paddingRight: "40px" }}>Title: </label>
           <TextField
-            style={{ width: "80%" }}
             id="outlined-basic"
             name="memoTitle"
-            onChange={(e) => this.handleChange(e)}
-            value={this.state.memoTitle || ""}
-            variant="outlined"
+            label="Title"
+            className="formText"
+            onChange={(e) => handleChange(e)}
+            value={memoTitle || ""}
+            multiline
+            rows={6}
+            variant="filled"
           />
         </div>
+
         <div style={{ paddingTop: "20px" }}>
-          <label style={{ paddingRight: "40px" }}>Date: </label>
           <TextField
-            style={{ width: "80%" }}
-            id="outlined-basic"
-            name="date"
-            onChange={(e) => this.handleChange(e)}
-            value={this.state.date || ""}
-            variant="outlined"
-          />
-        </div>
-        <div style={{ paddingTop: "20px" }}>
-          <label style={{ paddingRight: "23px" }}>Remark: </label>
-          <TextField
-            style={{ width: "80%" }}
+            // style={{ width: "50%" }}
             id="outlined-basic"
             name="memoRemark"
-            onChange={(e) => this.handleChange(e)}
-            value={this.state.memoRemark || ""}
+            label="Remark"
+            className="formText"
+            onChange={(e) => handleChange(e)}
+            value={memoRemark || ""}
             multiline
-            rows={3}
-            variant="outlined"
+            rows={6}
+            variant="filled"
           />
         </div>
-        <div style={{ paddingTop: "20px" }}>
-          {/* <UploadButton /> */}
-          {/* <div className={classes.root}> */}
-          <div>
-            <input
-              accept="image/*"
-              // className={classes.input}
-              style={{ display: "none" }}
-              onChange={this.handleImageChange}
-              id="contained-button-file"
-              single="true"
-              type="file"
-            />
-            <label htmlFor="contained-button-file">
-              <Button variant="contained" color="primary" component="span">
-                Upload file
-              </Button>
-            </label>
-            {/* <input
-              type="file"
-              name="audio"
-              className="inputfile"
-              onChange={this.handleImageChange}
-            /> */}
+        <div >
+          <div style={{ paddingTop: "30px" }}>
+            <div>
+              <input
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={handleImageChange}
+                id="contained-button-file"
+                single="true"
+                type="file"
+              />
+              <label htmlFor="contained-button-file">
+                <Button variant="contained" color="primary" component="span">
+                  Upload file
+                </Button>
+              </label>
+            </div>
           </div>
+          <TextField
+            id="standard-select-currency"
+            select
+            label="Select"
+            value={select}
+            onChange={handleChange}
+            helperText="Please select your currency"
+          >
+            <MenuItem value="PENDING">PENDING</MenuItem>
+            <MenuItem value="TREATED">TREATED</MenuItem>
+          </TextField>
         </div>
-        <div style={{ paddingTop: "20px" }}>
-          <Button variant="contained" onClick={(e) => this.handleSubmit(e)}>
+        <div className="" style={{ paddingTop: "30px" }}>
+          <Button variant="contained" onClick={(e) => handleSubmit(e)}>
             Submit
           </Button>
         </div>
       </div>
-    );
-  }
+    </Container>
+  );
 }
 
 export default connect(null, { memo })(Form);

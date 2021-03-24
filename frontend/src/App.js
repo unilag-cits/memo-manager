@@ -53,7 +53,7 @@ import {
   faEye,
   // faChartBar,
 } from "@fortawesome/free-regular-svg-icons";
-import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
+import { fasortdown, faPaperclip } from "@fortawesome/free-solid-svg-icons";
 library.add(
   // far,
   // faSquare,
@@ -91,6 +91,7 @@ library.add(
   // faFilePdf,
   // faFileCode,
   // faFileAlt,
+  // faSortDown,
   faEdit,
   faEye,
   faPaperclip

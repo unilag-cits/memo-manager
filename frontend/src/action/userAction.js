@@ -48,6 +48,7 @@ export const signup = (user) => (dispatch) => {
 
   // Request body
   const body = JSON.stringify(user);
+  // console.log(body);
 
   axios
     .post(`${process.env.REACT_APP_API}/api/users/signup`, body, config)

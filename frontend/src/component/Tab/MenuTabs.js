@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import { Container } from "@material-ui/core";
@@ -53,16 +53,19 @@ const useStyles = makeStyles((theme) => ({
     color: "#000",
   },
   tabPanel: {
-    marginTop: "20px",
+    marginTop: "5px",
   },
   pad: {
     paddingTop: "30px",
   },
 }));
 
-export default function SimpleTabs() {
+function SimpleTabs(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+  const [name, setName] = React.useState("ADD NEW");
+  const [isEdit, setisEdit] = useState(false);
+
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -77,7 +80,7 @@ export default function SimpleTabs() {
             onChange={handleChange}
             aria-label="simple tabs example"
           >
-            <Tab className={classes.pad} label="List" {...a11yProps(0)} />
+            <Tab className={classes.pad} label="Arrivals" {...a11yProps(0)} />
             <Tab className={classes.pad} label="Add New" {...a11yProps(1)} />
             <Tab
               className={classes.pad}
@@ -90,10 +93,11 @@ export default function SimpleTabs() {
       </AppBar>
       <Container className={classes.pad}>
         <TabPanel className={classes.tabPanel} value={value} index={0}>
-          <Memolist />
+          <Memolist setTab={setValue} setNames={setName} setisEdit={setisEdit} />
         </TabPanel>
         <TabPanel className={classes.tabPanel} value={value} index={1}>
-          <AddNew />
+          {/* {localStorage.setItem("add", "ADD NEW MEMO")} */}
+          <AddNew name={name} isEdit={isEdit} />
         </TabPanel>
         <TabPanel className={classes.tabPanel} value={value} index={2}>
           Item Three
@@ -105,3 +109,5 @@ export default function SimpleTabs() {
     </div>
   );
 }
+
+export default SimpleTabs;

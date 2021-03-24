@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -26,9 +26,9 @@
 
 .App-link {
   color: #61dafb;
-}
+} */
 
-@keyframes App-logo-spin {
+/* @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
@@ -41,12 +41,7 @@
   text-transform: capitalize;
   text-align: center;
   margin-top: 3rem;
-}
-
-.new {
-  display: flex;
-  flex-wrap: wrap;
-}
+} */
 
 .nextRight {
   position: absolute;
@@ -58,10 +53,28 @@
   left: 0;
 }
 
+/* .new {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .new > div {
   margin: 10px;
   padding: 5px;
   width: 100%;
+} */
+
+.new {
+  display: flex;
+  flex-wrap: wrap;
+  /* margin: 100; */
+}
+
+/* display content side by side on new.js page */
+.new > div {
+  margin: 20px;
+  padding: 10px;
+  width: 45%;
 }
 
 /* pagination starts */
@@ -114,8 +127,6 @@
   margin-top: 80px;
   margin-bottom: 20px;
   border-radius: 4px;
-  /* box-shadow: 0px 0px 6px #666; */
-  /* background: #fff; */
 }
 
 .responsive-container table {
@@ -169,10 +180,9 @@
 
   /* responsive search bar */
   .search {
-    background-color: green;
     width: 50%;
     position: absolute;
-    right: 100
+    right: 100;
   }
 }
 
@@ -208,3 +218,37 @@ table th {
 .navstyle {
   background-color: blue;
 }
+
+.buttonAddnew {
+  background-color: red;
+  justify-content: last baseline;
+}
+
+.formUpdate {
+  width: 100%;
+}
+
+.formText {
+  /* background-color: red; */
+  width: 50%;
+}
+
+.formDate {
+  width: 20%;
+}
+
+/* @media (min-width: 600px) {
+  .formUpdate {
+    background-color: green;
+    width: 100%;
+  }
+
+  .formText {
+    width: 10%;
+    background-color: blue;
+  }
+
+  .formDate {
+    width: 100%;
+  }
+} */

@@ -8,10 +8,10 @@ import PropTypes from "prop-types";
 export class MusicUpload extends Component {
   render() {
     return (
-      <>
+      <div>
         <NavBar />
         <SimpleTabs />
-      </>
+      </div>
     );
   }
 }

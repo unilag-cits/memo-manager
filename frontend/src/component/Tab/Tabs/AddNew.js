@@ -1,23 +1,18 @@
 import React, { useState } from "react";
 import Form from "./Form";
-import { Button } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 
-const AddNew = () => {
+const AddNew = ({ name, isEdit }) => {
   return (
-    <div>
-      <div className="new">
-        <h2>NEW MEMO</h2>
-        <Button
-          onClick={(e) => this.handleClick(e)}
-          style={{ position: "absolute", right: 100, top: 250 }}
-        >
-          Memo List
-        </Button>
-      </div>
+    <Grid item xs={12}>
+      <Grid container justify="space-between" spacing={4}>
+        <h2 className="text-uppercase">{name}</h2>
+        <Button>Memo List</Button>
+      </Grid>
       <div>
-        <Form />
+        <Form nameState={name} />
       </div>
-    </div>
+    </Grid>
   );
 };
 

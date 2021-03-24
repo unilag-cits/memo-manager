@@ -4,6 +4,8 @@ import {
   MEMO_PENDING,
   MEMO_LOADING,
   MEMO_LOADED,
+  MEMO_UPDATE,
+  MEMO_UPDATE_ERROR,
 } from "../action/types";
 
 const initialState = {
@@ -25,6 +27,7 @@ export default function (state = initialState, action) {
         memo: action.payload,
       };
     case MEMO_SUCCESS:
+    case MEMO_UPDATE:
       return {
         ...state,
         success: true,
@@ -33,6 +36,7 @@ export default function (state = initialState, action) {
         memo: action.payload,
       };
     case MEMO_FAILURE:
+    case MEMO_UPDATE_ERROR:
       return {
         ...state,
         failure: true,

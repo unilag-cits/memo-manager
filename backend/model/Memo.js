@@ -14,6 +14,10 @@ const memoSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    LoggedDate: {
+      type: String,
+      required: true,
+    },
     date: {
       type: String,
       required: true,

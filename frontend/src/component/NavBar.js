@@ -1,35 +1,16 @@
-// import React from "react";
-// import PropTypes from "prop-types";
-// import { Container } from "@material-ui/core";
-// import { withStyles } from "@material-ui/core/styles";
-
-// const styles = (theme) => ({
-//   Navbar: {
-//     fontSize: "20px",
-//   },
-// });
-
-// const NavBar = (props) => {
-//   const { classes } = props;
-//   return (
-//     <div className="navstyle">
-//       <Container className={classes.Navbar}>
-//         <h2>{process.env.REACT_APP_NAME}</h2>
-//       </Container>
-//     </div>
-//   );
-// };
-
-// NavBar.propTypes = {
-//   classes: PropTypes.object.isRequired,
-// };
-
-// export default withStyles(styles)(NavBar);
-
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Container } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import { Avatar, Button, Collapse } from "@material-ui/core";
+import avatar from "../images/avatar.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import Logout from "../component/logout";
 
 const styles = (theme) => ({
   Navbar: {
@@ -39,10 +20,26 @@ const styles = (theme) => ({
 });
 
 class NavBar extends Component {
+  state = {
+    open: false,
+    anchorEl: null,
+  };
+
+  handleOpen = (e) => {
+    this.setState({ open: !this.state.open });
+  };
+
+  handleClick = (event) => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
   render() {
     const { classes } = this.props;
+    console.log(this.state.open);
     return (
-      // <>
       <div
         style={{
           backgroundColor: "#02456B",
@@ -52,11 +49,30 @@ class NavBar extends Component {
           fontWeight: "10%",
         }}
       >
-        <Container>
+        <Container style={{ display: "flex", justifyContent: "space-between" }}>
           <div>{process.env.REACT_APP_NAME}</div>
+          <div style={{ display: "flex" }}>
+            <div>
+              <Avatar alt="Remy Sharp" src={avatar} />
+            </div>
+            <Button onClick={(e) => this.handleClick(e)}>
+              <ArrowDropDownIcon />
+            </Button>
+            <Menu
+              id="simple-menu"
+              anchorEl={this.state.open}
+              keepMounted
+              open={Boolean(this.state.open)}
+              onClose={this.handleClose}
+            >
+              <MenuItem onClick={this.handleClose}>
+                <Logout />
+              </MenuItem>
+            </Menu>
+            {/* )} */}
+          </div>
         </Container>
       </div>
-      // </>
     );
   }
 }

@@ -6,6 +6,8 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
+import { useSelector, connect } from "react-redux";
+import { memoUpdate } from "../../action/newMemoForm";
 
 const useStyles = makeStyles({
   root: {
@@ -15,6 +17,11 @@ const useStyles = makeStyles({
     left: "50%",
     marginRight: "-50%",
     transform: `translate(-50%, -50%)`,
+  },
+  textField: {
+    // marginLeft: theme.spacing(1),
+    // marginRight: theme.spacing(1),
+    width: 200,
   },
   bullet: {
     display: "inline-block",
@@ -29,8 +36,9 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Edit() {
+function Edit(props) {
   const classes = useStyles();
+  // const userId = useSelector((state) => state.auth.user._id);
   const [values, setValues] = useState({
     title: "",
     from: "",
@@ -45,7 +53,21 @@ export default function Edit() {
   };
 
   const handleClick = (e) => {
-    console.log(values);
+    // e.prevenetDefault();
+    const userId = localStorage.getItem("editID");
+
+    console.log(userId);
+
+    const updateMemo = {
+      userId,
+      title,
+      from,
+      to,
+      dateofArrival,
+    };
+
+    // props.memoUpdate(updateMemo);
+    // console.log(values);
   };
 
   return (
@@ -88,11 +110,37 @@ export default function Edit() {
           </div>
           <div className="emails">
             <TextField
+              id="date"
+              label="Date"
+              variant="filled"
+              type="date"
+              defaultValue="2017-05-24"
+              onChange={handleChange("dateofArrival")}
+              className={classes.textField}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </div>
+          <div className="emails">
+            {/* <TextField
               id="filled-basic"
               // value={dateofArrival || ""}
               onChange={handleChange("dateofArrival")}
               label="DateOfArrival"
               variant="filled"
+            /> */}
+            <TextField
+              id="date"
+              label="Logged Date"
+              variant="filled"
+              type="date"
+              defaultValue="2017-05-24"
+              onChange={handleChange("dateofArrival")}
+              className={classes.textField}
+              InputLabelProps={{
+                shrink: true,
+              }}
             />
           </div>
         </CardContent>
@@ -105,3 +153,5 @@ export default function Edit() {
     </div>
   );
 }
+
+export default connect(null, { memoUpdate })(Edit);

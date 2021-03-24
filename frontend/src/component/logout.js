@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { logout } from "../action/userAction";
 import { connect } from "react-redux";
 import { Button } from "@material-ui/core";
+import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 
 export class Logout extends Component {
@@ -11,16 +12,16 @@ export class Logout extends Component {
 
   handleLogout = (e) => {
     e.preventDefault();
-    return (
-      this.props.logout,
-      this.props.history.push(`${process.env.REACT_APP_URL}/signin`)
-    );
+    // return (
+    this.props.logout();
+    // this.props.history.push(`${process.env.REACT_APP_URL}`);
+    // );
   };
 
   render() {
     return (
       <>
-        <Button onClick={(e) => this.handleLogout(e)} href="/signin">
+        <Button onClick={(e) => this.handleLogout(e)} href="">
           Logout
         </Button>
       </>
@@ -28,4 +29,4 @@ export class Logout extends Component {
   }
 }
 
-export default connect(null, { logout })(Logout);
+export default withRouter(connect(null, { logout })(Logout));
