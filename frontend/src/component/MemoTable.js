@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { PureComponent } from "react";
 import axios from "axios";
 import ReactPaginate from "react-paginate";
 import { connect, useSelector, useDispatch } from "react-redux";
@@ -7,39 +7,25 @@ import { Button } from "@material-ui/core";
 import moment from "moment";
 import { showModal } from "../action/modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import View from "./modal/view";
 
-const styles = (theme) => ({
-  root: {
-    width: "100%",
-  },
-  title: {
-    margin: "auto",
-    height: 80,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    color: theme.palette.text.secondary,
-  },
-});
+export class MemoTable extends PureComponent {
+  constructor(props) {
+    super(props);
 
-export function TranxReport({ props, setTabDetail, setisEdit, setNames }) {
-  const memo = useSelector((state) => state.memo.memo);
-  const dispatch = useDispatch();
-  const auth = useSelector((state) => state.auth.isAuthenticated);
-  const [values, setValues] = useState({
-    offset: 0,
-    tableData: [],
-    orgtableData: [],
-    perPage: 5,
-    currentPage: 0,
-    // pageCount:
-  });
+    this.state = {
+      offset: 0,
+      tableData: [],
+      orgtableData: [],
+      perPage: 5,
+      currentPage: 0,
+    };
+    // this.handlePageClick = this.handlePageClick.bind(this);
+  }
 
-  const { offset, tableData, orgtableData, perPage, currentPage } = values;
-
-  const handlePageClick = (e) => {
+  handlePageClick = (e) => {
     const selectedPage = e.selected;
-    const offset = selectedPage * perPage;
+    const offset = selectedPage * this.state.perPage;
 
     this.setState(
       {
@@ -52,45 +38,57 @@ export function TranxReport({ props, setTabDetail, setisEdit, setNames }) {
     );
   };
 
-  const loadMoreData = () => {
-    const data = orgtableData;
+  loadMoreData() {
+    const data = this.state.orgtableData;
 
-    const slice = data.slice(offset, offset + perPage);
+    const slice = data.slice(
+      this.state.offset,
+      this.state.offset + this.state.perPage
+    );
     this.setState({
-      pageCount: Math.ceil(data.length / perPage),
+      pageCount: Math.ceil(data.length / this.state.perPage),
       tableData: slice,
     });
-  };
+  }
 
-  // componentDidMount() {
-  //   this.getData();
-  // }
-  useEffect(() => {
-    getData();
-  }, []);
+  componentDidMount() {
+    this.getData();
+  }
 
-  const handleClick = (e) => {
+  getData() {
+    setTimeout(() => {
+      const data = this.props.memo.memo === null ? "" : this.props.memo.memo;
+      // console.log(data);
+      var slice = data.slice(
+        this.state.offset,
+        this.state.offset + this.state.perPage
+      );
+
+      this.setState({
+        pageCount: Math.ceil(data.length / this.state.perPage),
+        orgtableData: this.props.memo.memo,
+        tableData: slice,
+      });
+    }, 2000);
+  }
+
+  handleClick = (e) => {
     e.preventDefault();
     if (localStorage.getItem("modalValues") === undefined) {
       return;
+    } else if (localStorage.getItem("modalValues") === "view") {
+      // dispatch(showModal());
+      this.props.showModal();
+      console.log("view");
+      // return <View />;
+    } else if (localStorage.getItem("modalValues") === "paperclip") {
+      // dispatch(showModal());
+      this.props.showModal();
     }
-    dispatch(showModal());
   };
 
-  const getData = () => {
-    setTimeout(() => {
-      return memo === null
-        ? ""
-        : setValues({
-            pageCount: Math.ceil(memo.length / perPage),
-            orgtableData: memo,
-            tableData: memo.slice(offset, offset + perPage),
-          });
-    }, 2000);
-  };
-
-  return (
-    <div>
+  render() {
+    return (
       <div className="responsive-container">
         <table>
           <thead>
@@ -106,7 +104,7 @@ export function TranxReport({ props, setTabDetail, setisEdit, setNames }) {
             </tr>
           </thead>
           <tbody>
-            {tableData.map((tdata, index) => (
+            {this.state.tableData.map((tdata, index) => (
               <tr key={index}>
                 <td data-title="M/No">{index + 1}</td>
                 <td data-title="Title">{tdata.memoTitle}</td>
@@ -128,7 +126,7 @@ export function TranxReport({ props, setTabDetail, setisEdit, setNames }) {
                   <Button
                     onClick={(e) => {
                       if (localStorage.token) {
-                        handleClick(e);
+                        this.handleClick(e);
                         localStorage.setItem("modalValues", "view");
                       }
                     }}
@@ -139,9 +137,9 @@ export function TranxReport({ props, setTabDetail, setisEdit, setNames }) {
                   </Button>
                   <Button
                     onClick={() => {
-                      setTabDetail(1);
-                      setNames("EDIT");
-                      setisEdit(true);
+                      this.props.setTabDetail(1);
+                      this.props.setNames("EDIT");
+                      this.props.setisEdit(true);
                     }}
                   >
                     <span className="iconTag">
@@ -151,7 +149,7 @@ export function TranxReport({ props, setTabDetail, setisEdit, setNames }) {
                   <Button
                     onClick={(e) => {
                       if (localStorage.token) {
-                        handleClick(e);
+                        this.handleClick(e);
                         localStorage.setItem("modalValues", "paperclip");
                       }
                     }}
@@ -168,28 +166,27 @@ export function TranxReport({ props, setTabDetail, setisEdit, setNames }) {
             ))}
           </tbody>
         </table>
+
         <ReactPaginate
           previousLabel={"prev"}
           nextLabel={"next"}
           breakLabel={"..."}
           breakClassName={"break-me"}
-          // pageCount={pageCount}
-          pageCount={perPage}
+          pageCount={this.state.pageCount}
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}
-          onPageChange={handlePageClick}
+          onPageChange={this.handlePageClick}
           containerClassName={"pagination"}
           subContainerClassName={"pages pagination"}
           activeClassName={"active"}
         />
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 const mapStateToProps = (state) => ({
-  memo: state.memo.memo,
-  auth: state.auth.isAuthenticated,
+  memo: state.memo,
 });
 
-export default connect(null, { showModal })(withStyles(styles)(TranxReport));
+export default connect(mapStateToProps, { showModal })(MemoTable);

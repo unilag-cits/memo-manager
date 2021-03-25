@@ -5,6 +5,10 @@ import MemoTable from "../../MemoTable";
 import Grid from "@material-ui/core/Grid";
 
 const Memolist = ({ setTab, setNames, setisEdit }) => {
+  function testPage(i) {
+    setTab(i)
+  }
+
   return (
     <Container>
       <Grid item xs={12}>
@@ -27,7 +31,7 @@ const Memolist = ({ setTab, setNames, setisEdit }) => {
           <MemoTable
             setNames={setNames}
             setisEdit={setisEdit}
-            setTabDetail={setTab}
+            setTabDetail={testPage}
           />
         </div>
       </Grid>

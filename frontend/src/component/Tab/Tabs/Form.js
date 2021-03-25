@@ -6,7 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { memo } from "../../../action/newMemoForm";
 import MenuItem from "@material-ui/core/MenuItem";
 
-function Form() {
+function Form(props) {
   const [values, setValues] = useState({
     memoFrom: "",
     memoTo: "",
@@ -30,23 +30,9 @@ function Form() {
     select,
     imageFile,
   } = values;
-  // constructor(props) {
-  //   super(props);
-
-  //   this.state = {
-  //     memoFrom: "",
-  //     memoTo: "",
-  //     memoTitle: "",
-  //     memoRemark: "",
-  //     date: "",
-  //     loggedDate: "",
-  //     file: "",
-  //     imageFile: [],
-  //   };
-  // }
 
   const handleChange = (e) => {
-    setValues({ [e.target.name]: e.target.value });
+    setValues({ ...values, [e.target.name]: e.target.value });
     console.log(e.target.value);
   };
 
@@ -55,9 +41,7 @@ function Form() {
     const blobUrl = URL.createObjectURL(blob);
     const name = e.target.files[0].name;
     const type = e.target.files[0].type;
-    this.setState({
-      file: blobUrl,
-    });
+    setValues({ ...values, file: blobUrl });
 
     var newFile = new File(
       [blobUrl],
@@ -65,9 +49,7 @@ function Form() {
       { type },
       { lastModified: 1534584790000 }
     );
-    this.setState({
-      file: e.target.files[0],
-    });
+    setValues({ ...values, file: e.target.files[0] });
   };
 
   const handleSubmit = (e) => {
@@ -79,9 +61,11 @@ function Form() {
       memoTitle,
       memoRemark,
       date,
-      file,
       loggedDate,
-    } = this.state;
+      file,
+      select,
+      imageFile,
+    } = values;
 
     let formData = new FormData();
     formData.append("memoFrom", memoFrom);
@@ -104,7 +88,7 @@ function Form() {
 
     // console.log(newMemo);
 
-    this.props.memo(formData);
+    props.memo(formData);
   };
 
   return (
@@ -147,7 +131,7 @@ function Form() {
             name="memoFrom"
             className="formText"
             onChange={(e) => handleChange(e)}
-            value={memoFrom || ""}
+            value={memoFrom}
             variant="filled"
           />
         </div>
@@ -158,7 +142,7 @@ function Form() {
             label="To"
             className="formText"
             onChange={(e) => handleChange(e)}
-            value={memoTo || ""}
+            value={memoTo}
             variant="filled"
           />
         </div>
@@ -169,7 +153,7 @@ function Form() {
             label="Title"
             className="formText"
             onChange={(e) => handleChange(e)}
-            value={memoTitle || ""}
+            value={memoTitle}
             multiline
             rows={6}
             variant="filled"
@@ -184,13 +168,13 @@ function Form() {
             label="Remark"
             className="formText"
             onChange={(e) => handleChange(e)}
-            value={memoRemark || ""}
+            value={memoRemark}
             multiline
             rows={6}
             variant="filled"
           />
         </div>
-        <div >
+        <div>
           <div style={{ paddingTop: "30px" }}>
             <div>
               <input

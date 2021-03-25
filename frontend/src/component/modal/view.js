@@ -5,6 +5,8 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import CloseIcon from '@material-ui/icons/Close';
+import PrintIcon from '@material-ui/icons/Print';
 
 const useStyles = makeStyles({
   root: {
@@ -15,23 +17,33 @@ const useStyles = makeStyles({
     // justifySelf: "center",
     // marigin: "10%",
     margin: 0,
-    background: 'green',
+    background: '#fff',
     position: 'absolute',
     top: '50%',
     left: '50%',
-    marginRight: '-50%',
+    // marginRight: '-50%',
+    width: '90%',
+    height: '90vh',
     transform: `translate(-50%, -50%)`
   },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)",
+  closeImg: {
+    cursor:'pointer', 
+    float:'right', 
+    margin: '20px 20px 20px 0', 
+    width: '50px'
   },
-  title: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
+  heading: {
+    clear: 'both',
+    position: 'absolute',
+    width: '95%',
+    height: '58px',
+    margin: 'auto',
+    top: '100px',
+    background: '#F2F2F2',
+    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+    alignContent: 'center',
+    justifyContent: 'center',
+    textAlign: 'center'
   },
 });
 
@@ -43,28 +55,15 @@ export default function View() {
     <div className={classes.default}>
       <Card className={classes.root}>
         <CardContent>
-          <Typography
-            className={classes.title}
-            color="textSecondary"
-            gutterBottom
-          >
-            Word of the Day
-          </Typography>
-          <Typography variant="h5" component="h2">
-            be{bull}nev{bull}o{bull}lent
-          </Typography>
-          <Typography className={classes.pos} color="textSecondary">
-            adjective
-          </Typography>
-          <Typography variant="body2" component="p">
-            well meaning and kindly.
-            <br />
-            {'"a benevolent smile"'}
-          </Typography>
-        </CardContent>
-        <CardActions>
-          <Button size="small">Learn More</Button>
-        </CardActions>
+          <CloseIcon className={classes.closeImg}/>
+          <PrintIcon className={classes.closeImg}/>
+
+          <div className={classes.heading}>
+            MEMO DETAILS
+          </div>
+
+
+        </CardContent>  
       </Card>
     </div>
   );

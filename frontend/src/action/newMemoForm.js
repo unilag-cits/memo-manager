@@ -33,7 +33,7 @@ export const loadMemo = () => (dispatch, getState) => {
 
 // add new memo
 export const memo = (formData) => (dispatch, getState) => {
-  dispatch({ type: MEMO_FAILURE });
+  // dispatch({ type: MEMO_FAILURE });
   axios
     .post(
       `${process.env.REACT_APP_API}/api/newMemo/memo`,
