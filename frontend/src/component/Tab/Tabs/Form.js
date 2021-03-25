@@ -30,6 +30,23 @@ function Form(props) {
     select,
     imageFile,
   } = values;
+<<<<<<< HEAD
+  // constructor(props) {
+  //   super(props);
+
+  //   this.state = {
+  //     memoFrom: "",
+  //     memoTo: "",
+  //     memoTitle: "",
+  //     memoRemark: "",
+  //     date: "",
+  //     loggedDate: "",
+  //     file: "",
+  //     imageFile: [],
+  //   };
+  // }
+=======
+>>>>>>> ac83e25b82d9567c0a54311523b551a7f1a92e3f
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -41,7 +58,13 @@ function Form(props) {
     const blobUrl = URL.createObjectURL(blob);
     const name = e.target.files[0].name;
     const type = e.target.files[0].type;
+<<<<<<< HEAD
+    setValues({ ...values, 
+      file: blobUrl,
+    });
+=======
     setValues({ ...values, file: blobUrl });
+>>>>>>> ac83e25b82d9567c0a54311523b551a7f1a92e3f
 
     var newFile = new File(
       [blobUrl],
@@ -49,12 +72,29 @@ function Form(props) {
       { type },
       { lastModified: 1534584790000 }
     );
+<<<<<<< HEAD
+    setValues({...values, 
+      file: e.target.files[0],
+    });
+=======
     setValues({ ...values, file: e.target.files[0] });
+>>>>>>> ac83e25b82d9567c0a54311523b551a7f1a92e3f
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
+<<<<<<< HEAD
+    // const {
+    //   memoFrom,
+    //   memoTo,
+    //   memoTitle,
+    //   memoRemark,
+    //   date,
+    //   file,
+    //   loggedDate,
+    // } = this.state;
+=======
     const {
       memoFrom,
       memoTo,
@@ -66,6 +106,7 @@ function Form(props) {
       select,
       imageFile,
     } = values;
+>>>>>>> ac83e25b82d9567c0a54311523b551a7f1a92e3f
 
     let formData = new FormData();
     formData.append("memoFrom", memoFrom);
@@ -174,7 +215,11 @@ function Form(props) {
             variant="filled"
           />
         </div>
+<<<<<<< HEAD
+        <div >
+=======
         <div>
+>>>>>>> ac83e25b82d9567c0a54311523b551a7f1a92e3f
           <div style={{ paddingTop: "30px" }}>
             <div>
               <input
