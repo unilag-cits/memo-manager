@@ -38,10 +38,10 @@ class NavBar extends Component {
   };
   render() {
     const { classes } = this.props;
-<<<<<<< HEAD
-    console.log(this.state.open);
-=======
->>>>>>> ac83e25b82d9567c0a54311523b551a7f1a92e3f
+// <<<<<<< HEAD
+//     console.log(this.state.open);
+// =======
+// >>>>>>> ac83e25b82d9567c0a54311523b551a7f1a92e3f
     return (
       <div
         style={{
@@ -65,11 +65,11 @@ class NavBar extends Component {
               id="simple-menu"
               anchorEl={this.state.open}
               keepMounted
-<<<<<<< HEAD
-              open={Boolean(this.state.open)}
-=======
+// <<<<<<< HEAD
+//               open={Boolean(this.state.open)}
+// =======
               open={Boolean(this.state.anchorEl)}
->>>>>>> ac83e25b82d9567c0a54311523b551a7f1a92e3f
+// {/* >>>>>>> ac83e25b82d9567c0a54311523b551a7f1a92e3f */}
               onClose={this.handleClose}
             >
               <MenuItem onClick={this.handleClose}>
