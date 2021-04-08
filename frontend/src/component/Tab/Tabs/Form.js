@@ -243,10 +243,10 @@ function Form(props) {
             label="Select"
             value={select}
             onChange={handleChange}
-            helperText="Please select your currency"
+            helperText="Please select memo status"
           >
             <MenuItem value="PENDING">PENDING</MenuItem>
-            <MenuItem value="TREATED">TREATED</MenuItem>
+            <MenuItem value="URGENT">URGENT</MenuItem>
           </TextField>
         </div>
         <div className="" style={{ paddingTop: "30px" }}>

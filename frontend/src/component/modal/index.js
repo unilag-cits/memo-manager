@@ -21,7 +21,8 @@ function SimpleModal(props) {
         ) : localStorage.getItem("modalValues") === "edit" ? (
           <Edit />
         ) : localStorage.getItem("modalValues") === "view" ? (
-          <View />
+          // localStorage.getItem("modalData"), 
+          <View onClose={props.hideModal}/>
         ) : (
           ""
         )}
