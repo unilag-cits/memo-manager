@@ -1,7 +1,7 @@
 import { SHOW_MODAL, HIDE_MODAL } from '../action/types'
 
 const initialState = {
-  autoModal: false
+  autoModal: false,
 }
 
 const modal = (state = initialState, action) => {
@@ -9,7 +9,7 @@ const modal = (state = initialState, action) => {
     case SHOW_MODAL:
       return {
         ...state,
-        autoModal: true
+        autoModal: true,
       }
     case HIDE_MODAL:
       return {

@@ -72,6 +72,8 @@ export default function View(props) {
   const classes = useStyles();
   const bull = <span className={classes.bullet}>•</span>;
 
+  console.log(props);
+
   return (
     <div className={classes.default}>
       <Card className={classes.root}>

@@ -2,7 +2,7 @@ import { SHOW_MODAL, HIDE_MODAL } from "./types";
 
 export const showModal = () => (dispatch) => {
   dispatch({
-    type: SHOW_MODAL
+    type: SHOW_MODAL,
   })
 }
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 // import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import { useSelector, connect } from "react-redux";
@@ -12,6 +12,15 @@ import { hideModal } from "../../action/modal";
 
 function SimpleModal(props) {
   const modal = useSelector((state) => state.modal.autoModal);
+  const [bigData, setBigData] = useState(null);
+
+  useEffect(() => {
+    const data = props.memo.memo === null ? "" : props.memo.memo;
+
+    setBigData(data);
+  }, [])
+
+  console.log(bigData);
 
   const body = (
     <div className="w-100">
@@ -22,7 +31,7 @@ function SimpleModal(props) {
           <Edit />
         ) : localStorage.getItem("modalValues") === "view" ? (
           // localStorage.getItem("modalData"), 
-          <View onClose={props.hideModal}/>
+          <View viewData={bigData} onClose={props.hideModal}/>
         ) : (
           ""
         )}
@@ -48,4 +57,8 @@ function SimpleModal(props) {
   );
 }
 
-export default connect(null, { hideModal })(SimpleModal);
+const mapStateToProps = state => ({
+  memo: state.memo
+})
+
+export default connect(mapStateToProps, { hideModal })(SimpleModal);

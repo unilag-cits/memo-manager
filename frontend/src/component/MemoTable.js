@@ -75,11 +75,11 @@ export class MemoTable extends PureComponent {
   handleClick = (e) => {
     e.preventDefault();
     if (localStorage.getItem("modalValues") === undefined) {
-      return;
+      return "";
     } else if (localStorage.getItem("modalValues") === "view") {
       // dispatch(showModal());
       this.props.showModal();
-      console.log("view");
+      // console.log("view");
       // return <View />;
     } else if (localStorage.getItem("modalValues") === "paperclip") {
       // dispatch(showModal());
@@ -127,7 +127,7 @@ export class MemoTable extends PureComponent {
                     // data={tdata}
                     onClick={(e) => {
                       if (localStorage.token) {
-                        this.handleClick(e);
+                        this.handleClick(e  );
                         localStorage.setItem("modalValues", "view");
                         // localStorage.setItem("modalData", tdata);
                       }
