@@ -44,7 +44,14 @@ router.post("/memo", auth, (req, res) => {
       return res.json({ success: false, err });
     }
 
-    const { memoTo, memoFrom, memoTitle, memoRemark, date, loggedDate } = req.body;
+    const {
+      memoTo,
+      memoFrom,
+      memoTitle,
+      memoRemark,
+      date,
+      loggedDate,
+    } = req.body;
 
     console.log(req);
 
@@ -61,6 +68,33 @@ router.post("/memo", auth, (req, res) => {
     memo.save();
     res.status(200).send({ memo: memo, msg: "Memo successfully registered" });
   });
+});
+
+router.post("/queryMemo", auth, (req, res) => {
+  const { queryId } = req.body;
+  console.log(queryId);
+  // uploads(req, res, (err) => {
+  //   if (err) {
+  //     return res.json({ success: false, err });
+  //   }
+
+  //   const { memoTo, memoFrom, memoTitle, memoRemark, date, loggedDate } = req.body;
+
+  //   console.log(req);
+
+  //   const memo = new Memo({
+  //     memoTo: memoTo,
+  //     memoFrom: memoFrom,
+  //     memoTitle: memoTitle,
+  //     memoRemark: memoRemark,
+  //     LoggedDate: loggedDate,
+  //     path: req.file.path,
+  //     date: date,
+  //   });
+
+  //   memo.save();
+  //   res.status(200).send({ memo: memo, msg: "Memo successfully registered" });
+  // });
 });
 
 router.post("/memoUpdate", auth, (req, res) => {
