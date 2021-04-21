@@ -70,36 +70,16 @@ router.post("/memo", auth, (req, res) => {
   });
 });
 
-router.post("/queryMemo", auth, (req, res) => {
-  const { queryId } = req.body;
-  console.log(queryId);
-  // uploads(req, res, (err) => {
-  //   if (err) {
-  //     return res.json({ success: false, err });
-  //   }
-
-  //   const { memoTo, memoFrom, memoTitle, memoRemark, date, loggedDate } = req.body;
-
-  //   console.log(req);
-
-  //   const memo = new Memo({
-  //     memoTo: memoTo,
-  //     memoFrom: memoFrom,
-  //     memoTitle: memoTitle,
-  //     memoRemark: memoRemark,
-  //     LoggedDate: loggedDate,
-  //     path: req.file.path,
-  //     date: date,
-  //   });
-
-  //   memo.save();
-  //   res.status(200).send({ memo: memo, msg: "Memo successfully registered" });
-  // });
+router.post("/queryMemo", auth, async (req, res) => {
+  const { id } = req.body;
+  console.log(id);
+  const memo = await Memo.findById({ _id: id });
+  // console.log(memo);
+  res.status(200).json(memo);
 });
 
 router.post("/memoUpdate", auth, (req, res) => {
   const { userId, title, from, to, dateofArrival } = req.body;
-  console.log(req.body);
   User.findOneAndUpdate(
     userId,
     { title, from, to, dateofArrival },

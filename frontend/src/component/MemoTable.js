@@ -16,6 +16,7 @@ export class MemoTable extends PureComponent {
     this.state = {
       offset: 0,
       tableData: [],
+      eachDetails: {},
       orgtableData: [],
       perPage: 5,
       currentPage: 0,
@@ -87,7 +88,40 @@ export class MemoTable extends PureComponent {
     }
   };
 
+  handleClicks = (props) => {
+    // console.log(props.id);
+    const id = props.id;
+    const token = this.props.authUser.token;
+
+    console.log(token);
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    // if token, add to header
+    if (token) {
+      config.headers["x-auth-token"] = token;
+    }
+
+    const queryId = {
+      id,
+    };
+
+    axios
+      .post(
+        `${process.env.REACT_APP_API}/api/newMemo/queryMemo`,
+        queryId,
+        config
+      )
+      .then((res) => this.setState({ eachDetails: res.data }))
+      .catch((err) => console.log(err));
+  };
+
   render() {
+    console.log(this.state.eachDetails);
     return (
       <div className="responsive-container">
         <table>
@@ -105,6 +139,7 @@ export class MemoTable extends PureComponent {
           </thead>
           <tbody>
             {this.state.tableData.map((tdata, index) => (
+              // console.log(tdata)
               <tr key={index}>
                 <td data-title="M/No">{index + 1}</td>
                 <td data-title="Title">{tdata.memoTitle}</td>
@@ -123,11 +158,11 @@ export class MemoTable extends PureComponent {
                   </Button>
                 </td>
                 <td data-title="Pending">
-                  <Button 
+                  <Button
                     // data={tdata}
                     onClick={(e) => {
                       if (localStorage.token) {
-                        this.handleClick(e  );
+                        this.handleClicks({ id: tdata._id });
                         localStorage.setItem("modalValues", "view");
                         // localStorage.setItem("modalData", tdata);
                       }
@@ -188,6 +223,7 @@ export class MemoTable extends PureComponent {
 
 const mapStateToProps = (state) => ({
   memo: state.memo,
+  authUser: state.auth,
 });
 
 export default connect(mapStateToProps, { showModal })(MemoTable);

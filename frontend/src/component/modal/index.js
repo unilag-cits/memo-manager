@@ -20,7 +20,7 @@ function SimpleModal(props) {
     setBigData(data);
   }, [])
 
-  console.log(bigData);
+  // console.log(bigData);
 
   const body = (
     <div className="w-100">
