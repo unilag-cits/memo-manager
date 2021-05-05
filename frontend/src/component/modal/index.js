@@ -8,11 +8,14 @@ import { useSelector, connect } from "react-redux";
 import Paperclip from "./paperClip";
 import View from "./view";
 import Edit from "./edit";
+import Treat from "./treat";
 import { hideModal } from "../../action/modal";
 
 function SimpleModal(props) {
   const modal = useSelector((state) => state.modal.autoModal);
   const [bigData, setBigData] = useState(null);
+
+//  console.log(props);
 
   useEffect(() => {
     const data = props.memo.memo === null ? "" : props.memo.memo;
@@ -20,7 +23,7 @@ function SimpleModal(props) {
     setBigData(data);
   }, [])
 
-  console.log(bigData);
+  // console.log(bigData);
 
   const body = (
     <div className="w-100">
@@ -31,7 +34,9 @@ function SimpleModal(props) {
           <Edit />
         ) : localStorage.getItem("modalValues") === "view" ? (
           // localStorage.getItem("modalData"), 
-          <View viewData={bigData} onClose={props.hideModal}/>
+          <View viewData={props.userData} onClose={props.hideModal}/>
+        ) : localStorage.getItem("modalValues") === "treat" ? (
+          <Treat onClose={props.hideModal}/>
         ) : (
           ""
         )}

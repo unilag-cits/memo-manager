@@ -6,9 +6,9 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import IconButton from '@material-ui/core/IconButton'
 import Typography from "@material-ui/core/Typography";
-import Tooltip from '@material-ui/core/Tooltip';
 import CloseIcon from '@material-ui/icons/Close';
 import PrintIcon from '@material-ui/icons/Print';
+import TextField from '@material-ui/core/TextField';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { showModal, hideModal } from "../../action/modal";
 
@@ -70,24 +70,28 @@ const useStyles = makeStyles({
     alignItems: 'center'
   },
   actionBtn: {
-    display: "inline-block",
+    display: "flex",
     paddint: "5px 20px ",
-    margin: "5px 50px 5px 5px"
+    justifyContent: "space-evenly"
   }
 });
 
-export default function View({viewData, onClose}) {
+export default function Treat(props) {
   const classes = useStyles();
   const bull = <span className={classes.bullet}>•</span>;
 
-  // console.log(viewData);
+  function handleClick(props) {
+    props.showModal();
+  }
 
-  function handleClick() {
-    if (localStorage.getItem("modalValues") === undefined) {
-      return "";
-    } else if (localStorage.getItem("modalValues") === "treat") {
+  const [value, setValue] = React.useState('');
 
-    }
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  };
+
+  function changeStatus () {
+    //this function should change the status of the memo and show the changes in the status button
   }
 
   return (
@@ -95,36 +99,22 @@ export default function View({viewData, onClose}) {
       <Card className={classes.root}>
         <CardContent>
 
-          <Tooltip title="Close" placement="left-start" arrow interactive>
-            <Button 
-              onClick={onClose} 
-              className={classes.closeImg}
-              startIcon={<CloseIcon />}
-            >
-            </Button>
-          </Tooltip>
-          <Tooltip title="Close" placement="left-start" arrow interactive>
-            <Button 
-              disabled 
-              className={classes.closeImg}
-              startIcon={<PrintIcon />}
-            >
-            </Button>
-          </Tooltip>
+          <CloseIcon onClick={props.onClose} className={classes.closeImg} />
+          <PrintIcon className={classes.closeImg}/>
 
           <div className={classes.heading}>
-            MEMO DETAILS
+            TREAT MEMO
           </div>
 
           <div className={classes.spaces}>
-            <span>Logged date: <strong>Date</strong></span>
+            <span>Logged date:   <strong>Date</strong></span>
             <span>
               Status:   
               <Button
                 variant="contained"
-                style={{ backgroundColor: "#FF0000", color: "#fff", marginLeft: "20px" }}
+                style={{ backgroundColor: "#FF0000", color: "#fff" }}
               >
-                Pending
+                pending
               </Button>
             </span>
           </div>
@@ -139,46 +129,28 @@ export default function View({viewData, onClose}) {
                   <td colSpan='3'>{}</td>
                 </tr>
                 <tr>
-                  <td>From: </td>
-                  <td></td>
-                  <td>To: </td>
-                  <td></td>
-                  <td>Date: </td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td className="double">Details: </td>
-                  <td className="double" colSpan="5"></td>
-                </tr>
-                <tr>
-                  <td>Actions: </td>
-                  <td colSpan="5">
-                    <div className={classes.actionBtn}>
-                      <Button
-                        variant="contained"
-                        style={{ backgroundColor: "#2E87A9", color: "#fff" }}
-                        onClick={(e) => {
-                          if (localStorage.token) {
-                            handleClick();
-                            localStorage.setItem("modalValues", "treat");
-                          }
-                        }}
-                      >
-                        Treat
-                      </Button>
-                    </div>
-                    <div className={classes.actionBtn}>
-                      <Button
-                        variant="contained"
-                        style={{ backgroundColor: "#2E87A9", color: "#fff" }}
-                      >
-                        Re-assign
-                      </Button>
-                    </div>
+                  <td className="double">Add remark </td>
+                  <td className="double" colSpan="5">
+                  <TextField
+                    id="standard-multiline-flexible"
+                    label="Remarks"
+                    multiline
+                    rowsMax={4}
+                    value={value}
+                    onChange={handleChange}
+                  />
                   </td>
                 </tr>
               </tbody>
             </table>
+
+            <Button
+              variant="contained"
+              style={{ backgroundColor: "#2E87A9", color: "#fff" }}
+              onClick={changeStatus}
+            >
+              Re-assign
+            </Button>
           </div>
 
         </CardContent>  

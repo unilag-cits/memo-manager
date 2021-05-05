@@ -44,7 +44,14 @@ router.post("/memo", auth, (req, res) => {
       return res.json({ success: false, err });
     }
 
-    const { memoTo, memoFrom, memoTitle, memoRemark, date, loggedDate } = req.body;
+    const {
+      memoTo,
+      memoFrom,
+      memoTitle,
+      memoRemark,
+      date,
+      loggedDate,
+    } = req.body;
 
     console.log(req);
 
@@ -63,9 +70,16 @@ router.post("/memo", auth, (req, res) => {
   });
 });
 
+router.post("/queryMemo", auth, async (req, res) => {
+  const { id } = req.body;
+  console.log(id);
+  const memo = await Memo.findById({ _id: id });
+  // console.log(memo);
+  res.status(200).json(memo);
+});
+
 router.post("/memoUpdate", auth, (req, res) => {
   const { userId, title, from, to, dateofArrival } = req.body;
-  console.log(req.body);
   User.findOneAndUpdate(
     userId,
     { title, from, to, dateofArrival },

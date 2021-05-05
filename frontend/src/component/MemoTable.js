@@ -1,93 +1,136 @@
-import React, { PureComponent } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ReactPaginate from "react-paginate";
 import { connect, useSelector, useDispatch } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
+import Tooltip from '@material-ui/core/Tooltip';
 import { Button } from "@material-ui/core";
 import moment from "moment";
 import { showModal } from "../action/modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import View from "./modal/view";
 
-export class MemoTable extends PureComponent {
-  constructor(props) {
-    super(props);
+const MemoTable = (props) => {
 
-    this.state = {
-      offset: 0,
-      tableData: [],
-      orgtableData: [],
-      perPage: 5,
-      currentPage: 0,
-    };
-    // this.handlePageClick = this.handlePageClick.bind(this);
-  }
+  const [offset, setOffset] = useState(0);
+  const [tableData, setTableData] = useState([]);
+  const [eachDetails, setEachDetails] = useState([]);
+  const [orgtableData, setOrgTableData] = useState([]);
+  const [perPage, setPerPage] = useState(5);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageCount, setPageCount] = useState(0);  
 
-  handlePageClick = (e) => {
+  const dispatch = useDispatch();
+
+  
+  function handlePageClick (e) {
     const selectedPage = e.selected;
-    const offset = selectedPage * this.state.perPage;
+    const offset = selectedPage * perPage;
 
-    this.setState(
-      {
-        currentPage: selectedPage,
-        offset: offset,
-      },
-      () => {
-        this.loadMoreData();
-      }
-    );
+    setCurrentPage(selectedPage);
+    setOffset(offset);
+
   };
 
-  loadMoreData() {
-    const data = this.state.orgtableData;
+  useEffect(() => {
+    loadMoreData()
+  }, [currentPage, offset])
+
+  function loadMoreData() {
+    const data = orgtableData;
 
     const slice = data.slice(
-      this.state.offset,
-      this.state.offset + this.state.perPage
+      offset,
+      offset + perPage
     );
-    this.setState({
-      pageCount: Math.ceil(data.length / this.state.perPage),
-      tableData: slice,
-    });
+
+    setPageCount(Math.ceil(data.length / perPage))
+    setTableData(slice)
+
+    
   }
 
-  componentDidMount() {
-    this.getData();
-  }
+  useEffect(()=>{
+    getData();
+  },[])
 
-  getData() {
+  function getData() {
     setTimeout(() => {
-      const data = this.props.memo.memo === null ? "" : this.props.memo.memo;
+      const data = props.memo.memo === null ? "" : props.memo.memo;
       // console.log(data);
       var slice = data.slice(
-        this.state.offset,
-        this.state.offset + this.state.perPage
+        offset,
+        offset + perPage
       );
 
-      this.setState({
-        pageCount: Math.ceil(data.length / this.state.perPage),
-        orgtableData: this.props.memo.memo,
-        tableData: slice,
-      });
+      setPageCount(Math.ceil(data.length / perPage));
+      setOrgTableData(props.memo.memo);
+      setTableData(slice);
+
     }, 2000);
   }
 
-  handleClick = (e) => {
+  function handleClick(e, data) {
     e.preventDefault();
+
     if (localStorage.getItem("modalValues") === undefined) {
       return "";
     } else if (localStorage.getItem("modalValues") === "view") {
-      // dispatch(showModal());
-      this.props.showModal();
+      // dispatch(showModal(data));
+      props.showModal();
       // console.log("view");
       // return <View />;
     } else if (localStorage.getItem("modalValues") === "paperclip") {
       // dispatch(showModal());
-      this.props.showModal();
+      // props.showModal();
     }
   };
 
-  render() {
+  function handleClicks(id) {
+
+    // console.log(props);
+    if (localStorage.getItem("modalValues") === undefined) {
+      return "";
+    } else if (localStorage.getItem("modalValues") === "view") {
+      // dispatch(showModal());
+      props.showModal();
+      // console.log("view");
+      // return <View />;
+      const token = props.authUser.token;
+
+      // console.log(token);
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      // if token, add to header
+      if (token) {
+        config.headers["x-auth-token"] = token;
+      }
+
+      const queryId = id
+      console.log(queryId);
+
+      axios
+        .post(
+          `${process.env.REACT_APP_API}/api/newMemo/queryMemo`,
+          queryId,
+          config
+        )
+        .then((res) => {
+          setEachDetails(res.data);
+          
+          console.log(eachDetails);
+        })
+        .catch((err) => console.log(err));
+
+    }
+  };
+
+    // console.log(eachDetails);
+
     return (
       <div className="responsive-container">
         <table>
@@ -104,7 +147,8 @@ export class MemoTable extends PureComponent {
             </tr>
           </thead>
           <tbody>
-            {this.state.tableData.map((tdata, index) => (
+            {tableData.map((tdata, index) => (
+              // console.log(tdata)
               <tr key={index}>
                 <td data-title="M/No">{index + 1}</td>
                 <td data-title="Title">{tdata.memoTitle}</td>
@@ -123,46 +167,54 @@ export class MemoTable extends PureComponent {
                   </Button>
                 </td>
                 <td data-title="Pending">
-                  <Button 
-                    // data={tdata}
-                    onClick={(e) => {
-                      if (localStorage.token) {
-                        this.handleClick(e  );
-                        localStorage.setItem("modalValues", "view");
-                        // localStorage.setItem("modalData", tdata);
-                      }
-                    }}
-                  >
-                    <span>
-                      <FontAwesomeIcon icon={["far", "eye"]} color="#1976D2" />
-                    </span>
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      this.props.setTabDetail(1);
-                      this.props.setNames("EDIT");
-                      this.props.setisEdit(true);
-                    }}
-                  >
-                    <span className="iconTag">
-                      <FontAwesomeIcon icon={["far", "edit"]} color="#1976D2" />
-                    </span>
-                  </Button>
-                  <Button
-                    onClick={(e) => {
-                      if (localStorage.token) {
-                        this.handleClick(e);
-                        localStorage.setItem("modalValues", "paperclip");
-                      }
-                    }}
-                  >
-                    <span className="iconTag">
-                      <FontAwesomeIcon
-                        icon={["fas", "paperclip"]}
-                        color="#1976D2"
-                      />
-                    </span>
-                  </Button>
+                  <Tooltip title="View details" placement="left-start" arrow interactive>
+                    <Button
+                      // data={tdata}
+                      onClick={(e) => {
+                        if (localStorage.token) {
+                          handleClicks(tdata._id);
+                          // this.handleClicks({ id: tdata._id, data: tdata });
+                          localStorage.setItem("modalValues", "view");
+                          // localStorage.setItem("modalData", tdata);
+                        }
+                      }}
+
+                    >
+                      <span>
+                        <FontAwesomeIcon icon={["far", "eye"]} color="#1976D2" />
+                      </span>
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title="Edit memo" placement="left-start" arrow interactive>
+                    <Button
+                      onClick={() => {
+                        this.props.setTabDetail(1);
+                        this.props.setNames("EDIT");
+                        this.props.setisEdit(true);
+                      }}
+                    >
+                      <span className="iconTag">
+                        <FontAwesomeIcon icon={["far", "edit"]} color="#1976D2" />
+                      </span>
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title="Show attached file" placement="left-start" arrow interactive>
+                    <Button
+                      onClick={(e) => {
+                        if (localStorage.token) {
+                          handleClick(e);
+                          localStorage.setItem("modalValues", "paperclip");
+                        }
+                      }}
+                    >
+                      <span className="iconTag">
+                        <FontAwesomeIcon
+                          icon={["fas", "paperclip"]}
+                          color="#1976D2"
+                        />
+                      </span>
+                    </Button>
+                  </Tooltip>
                 </td>
               </tr>
             ))}
@@ -173,21 +225,26 @@ export class MemoTable extends PureComponent {
           nextLabel={"next"}
           breakLabel={"..."}
           breakClassName={"break-me"}
-          pageCount={this.state.pageCount}
+          pageCount={pageCount}
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}
-          onPageChange={this.handlePageClick}
+          onPageChange={handlePageClick}
           containerClassName={"pagination"}
           subContainerClassName={"pages pagination"}
           activeClassName={"active"}
         />
       </div>
+
     );
-  }
+  
 }
 
 const mapStateToProps = (state) => ({
   memo: state.memo,
+  authUser: state.auth,
+  // userData: this.state.eachDetails,
 });
 
 export default connect(mapStateToProps, { showModal })(MemoTable);
+
+

@@ -20,3 +20,4 @@ export const SHOW_MODAL = "SHOW_MODAL";
 export const HIDE_MODAL = "HIDE_MODAL";
 export const MEMO_UPDATE = "MEMO_UPDATE";
 export const MEMO_UPDATE_ERROR = "MEMO_UPDATE_ERROR";
+

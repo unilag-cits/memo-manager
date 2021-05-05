@@ -1,8 +1,9 @@
 import { SHOW_MODAL, HIDE_MODAL } from "./types";
 
-export const showModal = () => (dispatch) => {
+export const showModal = (data) => (dispatch) => {
   dispatch({
     type: SHOW_MODAL,
+    payload: data,
   })
 }
 
@@ -11,3 +12,4 @@ export const hideModal = () => (dispatch) => {
     type: HIDE_MODAL
   })
 }
+
