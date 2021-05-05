@@ -111,7 +111,7 @@ const MemoTable = (props) => {
       }
 
       const queryId = id
-      console.log(queryId);
+      // console.log(queryId);
 
       axios
         .post(
